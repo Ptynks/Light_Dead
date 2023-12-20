@@ -7,7 +7,7 @@ enum {
 }
 
 const SPEED = 300.0
-const JUMP_VELOCITY = -500.0
+const JUMP_VELOCITY = -700.0
 var state = IDLE
 var power_attack = 30
 var count_combo = false
@@ -17,6 +17,9 @@ var current_direction = 0
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
 
 @onready var animation = $AnimationPlayer
+
+func _ready():
+	$pos/SwordHit/CollisionShape2D.disabled = true
 
 func _physics_process(delta):
 	var direction = 0
@@ -73,7 +76,15 @@ func finished_attack():
 	state = IDLE
 
 func in_combo():
+	if $Sprite2D.flip_h:
+		$pos.rotation_degrees = 180
+	else:
+		$pos.rotation_degrees = 360
+	
 	if count_combo:
 		animation.play("attack")
 	elif !count_combo:
 		animation.play("double_attack")
+
+func _on_sword_hit_area_entered(area):
+	print("hello")

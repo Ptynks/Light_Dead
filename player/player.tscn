@@ -1,28 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://bf76wafhl1po6"]
+[gd_scene load_steps=11 format=3 uid="uid://bf76wafhl1po6"]
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_5a5df"]
 [ext_resource type="Texture2D" uid="uid://dm5puuhwlete0" path="res://player/idle-Sheet.png" id="1_v6aam"]
+[ext_resource type="PackedScene" uid="uid://bew00qbn0khum" path="res://box/hitbox/sword_hit.tscn" id="3_ecu25"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mxkgt"]
-radius = 17.0
-height = 46.0
-
-[sub_resource type="Animation" id="Animation_aa27p"]
-resource_name = "idle"
-length = 0.6
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [0, 1, 2, 3, 4, 5]
-}
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_as4xs"]
+size = Vector2(23.5, 44)
 
 [sub_resource type="Animation" id="Animation_5eww8"]
 length = 0.001
@@ -38,22 +21,17 @@ tracks/0/keys = {
 "update": 1,
 "values": [0]
 }
-
-[sub_resource type="Animation" id="Animation_l1iop"]
-resource_name = "run"
-length = 0.7
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("pos/SwordHit/CollisionShape2D:disabled")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [7, 8, 9, 10, 11, 12, 13]
+"values": [false]
 }
 
 [sub_resource type="Animation" id="Animation_u4esv"]
@@ -86,6 +64,18 @@ tracks/1/keys = {
 "method": &"finished_attack"
 }]
 }
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("pos/SwordHit/CollisionShape2D:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
 
 [sub_resource type="Animation" id="Animation_ugw2d"]
 resource_name = "double_attack"
@@ -117,6 +107,52 @@ tracks/1/keys = {
 "method": &"finished_attack"
 }]
 }
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("pos/SwordHit/CollisionShape2D:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.2, 0.31361),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+
+[sub_resource type="Animation" id="Animation_aa27p"]
+resource_name = "idle"
+length = 0.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5]
+}
+
+[sub_resource type="Animation" id="Animation_l1iop"]
+resource_name = "run"
+length = 0.7
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [7, 8, 9, 10, 11, 12, 13]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_2vec5"]
 _data = {
@@ -133,15 +169,27 @@ script = ExtResource("1_5a5df")
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.3, 0.3)
 texture = ExtResource("1_v6aam")
 hframes = 26
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(3, 25)
-shape = SubResource("CapsuleShape2D_mxkgt")
+position = Vector2(1.25, 6)
+shape = SubResource("RectangleShape2D_as4xs")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
 "": SubResource("AnimationLibrary_2vec5")
 }
+
+[node name="pos" type="Marker2D" parent="."]
+position = Vector2(3, 12)
+rotation = -6.28319
+
+[node name="SwordHit" parent="pos" instance=ExtResource("3_ecu25")]
+
+[node name="CollisionShape2D" parent="pos/SwordHit" index="0"]
+position = Vector2(-48, 1.99999)
+disabled = false
+
+[editable path="pos/SwordHit"]
