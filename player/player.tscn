@@ -192,4 +192,8 @@ rotation = -6.28319
 position = Vector2(-48, 1.99999)
 disabled = false
 
+[node name="CoyoteJumpTimer" type="Timer" parent="."]
+wait_time = 0.123
+one_shot = true
+
 [editable path="pos/SwordHit"]
