@@ -1,8 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://bew00qbn0khum"]
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_uh2xe"]
-radius = 56.1321
-height = 176.363
+[gd_scene format=3 uid="uid://bew00qbn0khum"]
 
 [node name="SwordHit" type="Area2D"]
 scale = Vector2(0.5, 0.5)
@@ -10,5 +6,4 @@ scale = Vector2(0.5, 0.5)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-92, 3.99998)
 rotation = 1.5708
-shape = SubResource("CapsuleShape2D_uh2xe")
 disabled = true

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bf76wafhl1po6"]
+[gd_scene load_steps=12 format=3 uid="uid://bf76wafhl1po6"]
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_5a5df"]
 [ext_resource type="Texture2D" uid="uid://dm5puuhwlete0" path="res://player/idle-Sheet.png" id="1_v6aam"]
@@ -163,6 +163,10 @@ _data = {
 "run": SubResource("Animation_l1iop")
 }
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ef10o"]
+radius = 28.0
+height = 96.0
+
 [node name="Player" type="CharacterBody2D"]
 position = Vector2(145, 89)
 script = ExtResource("1_5a5df")
@@ -189,7 +193,8 @@ rotation = -6.28319
 [node name="SwordHit" parent="pos" instance=ExtResource("3_ecu25")]
 
 [node name="CollisionShape2D" parent="pos/SwordHit" index="0"]
-position = Vector2(-48, 1.99999)
+position = Vector2(-64, 1.99972)
+shape = SubResource("CapsuleShape2D_ef10o")
 disabled = false
 
 [node name="CoyoteJumpTimer" type="Timer" parent="."]
