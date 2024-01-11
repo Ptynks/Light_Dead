@@ -1,0 +1,70 @@
+[gd_scene load_steps=5 format=3 uid="uid://dw5jk2b5p4ds7"]
+
+[ext_resource type="Texture2D" uid="uid://c8bj0p5hynpvs" path="res://UI/icons/skill_icons/release_v1.2-single_1.png" id="1_4bqhq"]
+[ext_resource type="Texture2D" uid="uid://b58vl5p4y6gcq" path="res://UI/icons/skill_icons/release_v1.2-single_2.png" id="2_sucr0"]
+[ext_resource type="FontFile" uid="uid://2cfd83bx3ajv" path="res://font/m6x11.ttf" id="2_vrhqn"]
+[ext_resource type="Texture2D" uid="uid://qr2vlf868b21" path="res://UI/icons/skill_icons/release_v1.2-single_3.png" id="4_60ual"]
+
+[node name="choose_spell_level" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="Container" type="GridContainer" parent="."]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 367.0
+offset_top = 180.0
+offset_right = 468.0
+offset_bottom = 231.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(4.23166, 4.85476)
+columns = 3
+
+[node name="CenterContainer4" type="VBoxContainer" parent="Container"]
+layout_mode = 2
+size_flags_horizontal = 2
+mouse_default_cursor_shape = 2
+
+[node name="TextureRect" type="TextureRect" parent="Container/CenterContainer4"]
+layout_mode = 2
+texture = ExtResource("1_4bqhq")
+
+[node name="Label" type="Label" parent="Container/CenterContainer4"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_vrhqn")
+text = "skill
+"
+
+[node name="CenterContainer2" type="VBoxContainer" parent="Container"]
+layout_mode = 2
+size_flags_horizontal = 6
+mouse_default_cursor_shape = 2
+
+[node name="TextureRect2" type="TextureRect" parent="Container/CenterContainer2"]
+layout_mode = 2
+texture = ExtResource("2_sucr0")
+
+[node name="Label" type="Label" parent="Container/CenterContainer2"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_vrhqn")
+text = "skill
+"
+
+[node name="CenterContainer3" type="VBoxContainer" parent="Container"]
+layout_mode = 2
+size_flags_horizontal = 10
+mouse_default_cursor_shape = 2
+
+[node name="TextureRect3" type="TextureRect" parent="Container/CenterContainer3"]
+layout_mode = 2
+texture = ExtResource("4_60ual")
+
+[node name="Label" type="Label" parent="Container/CenterContainer3"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("2_vrhqn")
+text = "skill
+"

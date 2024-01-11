@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://bev10kbwlw73f"]
+
+[ext_resource type="Script" path="res://player/dash_effect.gd" id="1_0sgky"]
+
+[sub_resource type="Curve" id="Curve_6bu6m"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_d1vds"]
+offsets = PackedFloat32Array(0.186885, 0.662295, 0.888525, 1)
+colors = PackedColorArray(0.194253, 0.734839, 0.848832, 1, 0.957839, 0.986125, 0.99209, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_d3b80"]
+
+[node name="DashEffect" type="Line2D"]
+self_modulate = Color(1, 1, 1, 0.203922)
+width_curve = SubResource("Curve_6bu6m")
+default_color = Color(0.945098, 0.6, 0.658824, 1)
+gradient = SubResource("Gradient_d1vds")
+texture = SubResource("CanvasTexture_d3b80")
+script = ExtResource("1_0sgky")
+MAX_LENGTH = 20

@@ -1,73 +1,104 @@
 extends CharacterBody2D
 
-#liệt kê các trạng thái người chơi có thể có
-enum {
-	IDLE,
-	RUN,
-	ATTACK
-}
-
-const SPEED = 300.0 #tốc độ di chuyển
-const JUMP_VELOCITY = -700.0 #lực nhảy
-var state = IDLE #trạng thái mặt định
-var power_attack = 30 #đoạn cách nhân vật lướt nhẹ tới trước khi tấn công
-var count_combo = false #đếm số đòn đánh người chơi thực hiện (để xen kẽ giữa 2 animation tấn công khác nhau)
-var current_direction = 0 #hướng đi hiện tại của nhân vật tương ứng -1 0 1
+var direction
+@export var SPEED = 300.0 
+@export var JUMP_VELOCITY = -700.0 
+@export var power_attack = 30 
+var count_combo = false 
+var current_direction = 0 
+@export var HEALTH = 3
+@export var DASH_POWER = 6500
+@export var player_damage = 5
+@export var MAX_STAMINA = 100
+var current_stamina = 100
+var stamina_need_to_dash = 30
+var can_dash = true
+@export var stamina_restore = 10
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity") #lấy lwujc hấp dẫn được cài sẵn trong setting của game
 
 @onready var animation = $AnimationPlayer # lấy thư viện animation
 @onready var coyote_jump_time = $CoyoteJumpTimer # lấy thư viện đếm thời gian dùng cho coyote jump
+@onready var animation_tree = $AnimationTree["parameters/playback"]
+@onready var dash_timer = $DashTimer
+@onready var attack_cooldown = $AttackCooldown
+@onready var stamina_progess_bar = $CanvasPlayer/StaminaBarTexture
 
 func _ready():
-	# code trong này dc chạy 1 lần khi game bắt đầu chạy
-	$pos/SwordHit/CollisionShape2D.disabled = true #tắt hitbox đòn tấn công của nhân vật
+	$pos/SwordHit/CollisionShape2D.disabled = true
+	health_change()
 
 func _physics_process(delta):
 	# code trong này chạy lặp lại
-	var direction = 0 # hướng mặt nhân vật
+	direction = 0 # hướng mặt nhân vật
 	
 	if not is_on_floor():
-		#nếu không đứng trên nền
-		velocity.y += gravity * delta #rơi xuống theo trọng lực
+		velocity.y += gravity * delta 
 	
-	if Input.get_axis("ui_left", "ui_right"):
-		#sự kiện khi nhấn nút di chuyển (a, d)
-		direction = Input.get_axis("ui_left", "ui_right") #hướng của nhân vật được tính bằng cách nhận input của 2 nút a, d -1 = trái, 1 = phải 
-		state = RUN #đặt trạng thái là run
-		current_direction = direction
-	elif Input.is_action_just_pressed("attack") and is_on_floor():
-		# khi nhấn nút attack (j) và nhân vật đứng trên nền
-		state = ATTACK #đặt trạng thái là tấn công
-		count_combo = !count_combo # count combo được đặt ngược lại (nếu đang là true => false)
+	get_input()
+
+func _process(_delta):
+	
+	if current_stamina >= stamina_need_to_dash:
+		can_dash = true
+	
+	if current_stamina < MAX_STAMINA:
+		if dash_timer.time_left == 0:
+			dash_timer.start()
+			current_stamina += stamina_restore
+			stamina_progess_bar.update(current_stamina * 100 / MAX_STAMINA)
+
+func health_change():
+	for child in $HealthBar.get_children():
+		child.queue_free()
+	
+	for i in range(HEALTH):
+		var heart = Sprite2D.new()
+		heart.texture = load("res://UI/icons/heart.png")
+		heart.position = Vector2(30 * i, 0)
+		heart.scale = Vector2(2, 2)
+		heart.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		$HealthBar.add_child(heart)
+
+func get_input():
+	if Input.is_anything_pressed():
+		if not Input.is_action_pressed("attack"):
+			direction = Input.get_axis("ui_left", "ui_right")
 		
-	if is_on_floor() or coyote_jump_time.time_left > 0.0:
-		# sự kiến nếu nhân vật đứng trên nền và thời gian của coyote lớn hơn 0
-		if Input.is_action_just_pressed("ui_accept"):
-			# nếu người chơi nhấn nút accept (space)
-			velocity.y = JUMP_VELOCITY #tạo một lực theo trục y bằng lực nhảy (nhảy lên)
-		if not is_on_floor():
-			# nêu không đứng trên nền
-			if Input.is_action_just_released("ui_accept") and velocity.y < JUMP_VELOCITY / 2:
-				#sự kiện người dùng thả nút accept (space) và trục y < lực nhảy / 2
-				velocity.y = JUMP_VELOCITY / 2
-	
-	if Input.is_anything_pressed() == false and state != ATTACK:
-		# không có nút nào được nhấn và trạng thái không phải là tấn công
-		state = IDLE # trạng thái về mặt định
-	
-	match state:
-		#kiểm tra các trạng thái để chạy các animation tương ứng
-		RUN:
-			animation.play("run")
-			run_state(direction)
-		IDLE:
+		if direction != 0:
+			velocity.x = direction * SPEED
+			if direction == 1:
+				$Sprite2D.flip_h = true
+			else:
+				$Sprite2D.flip_h = false
+			animation_tree.travel("run")
+
+		if Input.is_action_pressed("attack") and attack_cooldown.time_left == 0:
+			animation_tree.travel("attack")
+			attack_cooldown.start()
 			velocity.x = 0
-			animation.play("idle")
-			idle_state()
-		ATTACK:
-			in_combo()
-			attack_state(current_direction)
+			if $Sprite2D.flip_h:
+				$pos.rotation_degrees = 180
+			else:
+				$pos.rotation_degrees = 360
+			return
+		
+		if Input.is_action_just_released("attack"):
+			$pos/SwordHit/CollisionShape2D.disabled = true
+		
+		if Input.is_action_pressed("jump") and is_on_floor() or Input.is_action_pressed("jump") and coyote_jump_time.time_left > 0.0:
+			velocity.y = JUMP_VELOCITY
+			animation_tree.travel("begin_jump")
+		
+		if Input.is_action_just_pressed("dash") and can_dash == true:
+			velocity.x = direction * DASH_POWER
+			can_dash = false
+			current_stamina -= stamina_need_to_dash
+			stamina_progess_bar.update(current_stamina * 100 / MAX_STAMINA)
+	else:
+		velocity.x = 0
+		$pos/SwordHit/CollisionShape2D.disabled = true
+		animation_tree.travel("idle")
 	
 	var was_on_floor = is_on_floor()
 	move_and_slide()
@@ -75,38 +106,15 @@ func _physics_process(delta):
 	if just_left_legde:
 		coyote_jump_time.start()
 
-func run_state(direction):
-	if direction:
-		velocity.x = direction * SPEED
-		#xoay nhân vật theo hướng di chuyển 
-		if direction > 0:
-			$Sprite2D.flip_h = true
-		else:
-			$Sprite2D.flip_h = false
+func damage(damage):
+	HEALTH -= damage
+	if HEALTH <= 0:
+		player_dead()
 	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-	
-func idle_state():
-	pass
-	
-func attack_state(current_direction):
-	velocity.x = current_direction * power_attack
-	
-func finished_attack():
-	state = IDLE
+		health_change()
 
-func in_combo():
-	# xoay hitbox người chơi theo hướng mặt nhân vật
-	if $Sprite2D.flip_h:
-		$pos.rotation_degrees = 180
-	else:
-		$pos.rotation_degrees = 360
-	
-	#đếm số lần đánh để chạy animation tương ứng = true => animation 1, false => animation 2
-	if count_combo:
-		animation.play("attack")
-	elif !count_combo:
-		animation.play("double_attack")
+func player_dead():
+	get_tree().change_scene_to_file("res://UI/main_menu.tscn")
 
-func _on_sword_hit_area_entered(area):
-	pass
+func _on_sword_hit_body_entered(body):
+	body.damage(player_damage)

@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://hrxrnsq4m0uc"]
+[gd_scene load_steps=5 format=3 uid="uid://hrxrnsq4m0uc"]
 
 [ext_resource type="Script" path="res://UI/main_menu.gd" id="1_woogm"]
 [ext_resource type="Texture2D" uid="uid://467yruotxg17" path="res://UI/main_menu_background.jpg" id="2_nr01l"]
+[ext_resource type="FontFile" uid="uid://2cfd83bx3ajv" path="res://font/m6x11.ttf" id="3_kynin"]
+[ext_resource type="Texture2D" uid="uid://d3gkt7jrb6ge" path="res://UI/icons/border_blue.png" id="4_m5hka"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -21,28 +23,55 @@ texture = ExtResource("2_nr01l")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 0
-offset_left = 94.0
-offset_top = 387.0
-offset_right = 368.0
-offset_bottom = 519.0
+offset_left = 57.0
+offset_top = 305.0
+offset_right = 331.0
+offset_bottom = 553.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 
 [node name="play_btn" type="Button" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
+focus_next = NodePath("../options_btn")
+focus_previous = NodePath("../quit_btn")
+focus_mode = 0
 mouse_default_cursor_shape = 2
+theme_override_fonts/font = ExtResource("3_kynin")
+theme_override_font_sizes/font_size = 40
 text = "PLAY"
+flat = true
+vertical_icon_alignment = 2
+text_direction = 1
 
 [node name="options_btn" type="Button" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
+focus_next = NodePath("../quit_btn")
+focus_previous = NodePath("../play_btn")
 mouse_default_cursor_shape = 2
+theme_override_fonts/font = ExtResource("3_kynin")
+theme_override_font_sizes/font_size = 40
 text = "OPTIONS"
+flat = true
+vertical_icon_alignment = 2
 
 [node name="quit_btn" type="Button" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 3
+focus_next = NodePath("../play_btn")
+focus_previous = NodePath("../options_btn")
 mouse_default_cursor_shape = 2
+theme_override_fonts/font = ExtResource("3_kynin")
+theme_override_font_sizes/font_size = 40
 text = "QUIT"
+flat = true
+vertical_icon_alignment = 2
+
+[node name="Arrow" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(193, 513)
+scale = Vector2(1.76549, 3.5)
+texture = ExtResource("4_m5hka")
 
 [connection signal="pressed" from="MarginContainer/VBoxContainer/play_btn" to="." method="_on_play_btn_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/options_btn" to="." method="_on_options_btn_pressed"]
