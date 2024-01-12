@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://dw5jk2b5p4ds7"]
+[gd_scene load_steps=6 format=3 uid="uid://dw5jk2b5p4ds7"]
 
 [ext_resource type="Texture2D" uid="uid://c8bj0p5hynpvs" path="res://UI/icons/skill_icons/release_v1.2-single_1.png" id="1_4bqhq"]
+[ext_resource type="Script" path="res://level/choose_spell_level.gd" id="1_fwws5"]
 [ext_resource type="Texture2D" uid="uid://b58vl5p4y6gcq" path="res://UI/icons/skill_icons/release_v1.2-single_2.png" id="2_sucr0"]
 [ext_resource type="FontFile" uid="uid://2cfd83bx3ajv" path="res://font/m6x11.ttf" id="2_vrhqn"]
 [ext_resource type="Texture2D" uid="uid://qr2vlf868b21" path="res://UI/icons/skill_icons/release_v1.2-single_3.png" id="4_60ual"]
@@ -8,6 +9,7 @@
 [node name="choose_spell_level" type="Control"]
 layout_mode = 3
 anchors_preset = 0
+script = ExtResource("1_fwws5")
 
 [node name="Container" type="GridContainer" parent="."]
 texture_filter = 1

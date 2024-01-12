@@ -1,5 +1,6 @@
 extends CharacterBody2D
 
+var save_path = "player://data.save"
 var direction
 @export var SPEED = 300.0 
 @export var JUMP_VELOCITY = -700.0 
@@ -27,6 +28,7 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity") #lấy l
 func _ready():
 	$pos/SwordHit/CollisionShape2D.disabled = true
 	health_change()
+	load_data()
 
 func _physics_process(delta):
 	# code trong này chạy lặp lại
@@ -118,3 +120,35 @@ func player_dead():
 
 func _on_sword_hit_body_entered(body):
 	body.damage(player_damage)
+
+func save():
+	var file = FileAccess.open(save_path, FileAccess.WRITE)
+	file.store_var(SPEED)
+	file.store_var(HEALTH)
+	file.store_var(JUMP_VELOCITY)
+	file.store_var(power_attack)
+	file.store_var(DASH_POWER)
+	file.store_var(player_damage)
+	file.store_var(MAX_STAMINA)
+	file.store_var(stamina_restore)
+
+func load_data():
+	if FileAccess.file_exists(save_path):
+		var file = FileAccess.open(save_path, FileAccess.READ)
+		SPEED = file.get_var(SPEED)
+		HEALTH = file.get_var(HEALTH)
+		JUMP_VELOCITY = file.get_var(JUMP_VELOCITY)
+		power_attack = file.get_var(power_attack)
+		DASH_POWER = file.get_var(DASH_POWER)
+		player_damage = file.get_var(player_damage)
+		MAX_STAMINA = file.get_var(MAX_STAMINA)
+		stamina_restore = file.get_var(stamina_restore)
+	else:
+		SPEED = 300.0 
+		JUMP_VELOCITY = -700.0 
+		power_attack = 30
+		HEALTH = 3
+		DASH_POWER = 6500
+		player_damage = 5
+		MAX_STAMINA = 100
+		stamina_restore = 10
