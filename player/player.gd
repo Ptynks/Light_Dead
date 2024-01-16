@@ -152,3 +152,6 @@ func load_data():
 		player_damage = 5
 		MAX_STAMINA = 100
 		stamina_restore = 10
+
+func is_player_in_floor():
+	return is_on_floor()

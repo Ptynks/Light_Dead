@@ -1,0 +1,77 @@
+[gd_scene load_steps=11 format=3 uid="uid://d3crk2tu4644"]
+
+[ext_resource type="Texture2D" uid="uid://c0velj5mufo5s" path="res://effect/effect.png" id="1_w6jcm"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fudio"]
+atlas = ExtResource("1_w6jcm")
+region = Rect2(128, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jjj3e"]
+atlas = ExtResource("1_w6jcm")
+region = Rect2(192, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4nhmr"]
+atlas = ExtResource("1_w6jcm")
+region = Rect2(256, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_urhey"]
+atlas = ExtResource("1_w6jcm")
+region = Rect2(320, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v4y3x"]
+atlas = ExtResource("1_w6jcm")
+region = Rect2(384, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dmbna"]
+atlas = ExtResource("1_w6jcm")
+region = Rect2(448, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dr5il"]
+atlas = ExtResource("1_w6jcm")
+region = Rect2(512, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vqh72"]
+atlas = ExtResource("1_w6jcm")
+region = Rect2(576, 64, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_fydqv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fudio")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jjj3e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4nhmr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_urhey")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v4y3x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dmbna")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dr5il")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vqh72")
+}],
+"loop": false,
+"name": &"default",
+"speed": 20.0
+}]
+
+[node name="Flash_Danger" type="Node2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+modulate = Color(1, 0.2, 0.345098, 0.905882)
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_fydqv")
+autoplay = "default"
+frame = 7
+frame_progress = 1.0

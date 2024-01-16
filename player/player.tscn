@@ -1,8 +1,9 @@
-[gd_scene load_steps=32 format=3 uid="uid://bf76wafhl1po6"]
+[gd_scene load_steps=33 format=3 uid="uid://bf76wafhl1po6"]
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_5a5df"]
 [ext_resource type="Texture2D" uid="uid://1b80xn5hnlt0" path="res://player/full-sheet.png" id="2_82104"]
 [ext_resource type="PackedScene" uid="uid://bew00qbn0khum" path="res://box/hitbox/sword_hit.tscn" id="3_ecu25"]
+[ext_resource type="PackedScene" uid="uid://c7bg8w8b55h17" path="res://effect/dust_effect.tscn" id="4_m73re"]
 [ext_resource type="Texture2D" uid="uid://cynh646m8hjnu" path="res://UI/icons/progess_border.png" id="4_wo0ol"]
 [ext_resource type="Texture2D" uid="uid://qwj3maxf6uf" path="res://UI/icons/progess.png" id="5_6trg2"]
 [ext_resource type="PackedScene" uid="uid://bev10kbwlw73f" path="res://player/dash_effect.tscn" id="5_vyb7d"]
@@ -269,7 +270,6 @@ anim_player = NodePath("../AnimationPlayer")
 
 [node name="pos" type="Marker2D" parent="."]
 position = Vector2(1, 12)
-rotation = -6.28319
 
 [node name="SwordHit" parent="pos" instance=ExtResource("3_ecu25")]
 collision_layer = 2
@@ -279,6 +279,8 @@ collision_mask = 2
 position = Vector2(-76, -2.00033)
 shape = SubResource("RectangleShape2D_b3xyw")
 disabled = false
+
+[node name="Dust_Effect" parent="pos/SwordHit" instance=ExtResource("4_m73re")]
 
 [node name="CoyoteJumpTimer" type="Timer" parent="."]
 wait_time = 0.123
