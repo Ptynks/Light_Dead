@@ -1,7 +1,7 @@
 [gd_scene load_steps=16 format=3 uid="uid://c7bg8w8b55h17"]
 
+[ext_resource type="Script" path="res://effect/dust_effect.gd" id="1_jdg13"]
 [ext_resource type="Texture2D" uid="uid://c0velj5mufo5s" path="res://effect/effect.png" id="1_jm1xh"]
-[ext_resource type="Script" path="res://effect/AnimatedSprite2D.gd" id="2_jhbsh"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_evgf1"]
 atlas = ExtResource("1_jm1xh")
@@ -96,6 +96,7 @@ animations = [{
 }]
 
 [node name="Dust_Effect" type="Node2D"]
+script = ExtResource("1_jdg13")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
@@ -104,6 +105,5 @@ sprite_frames = SubResource("SpriteFrames_ewbi2")
 autoplay = "default"
 frame = 11
 frame_progress = 1.0
-script = ExtResource("2_jhbsh")
 
-[connection signal="animation_finished" from="AnimatedSprite2D" to="AnimatedSprite2D" method="_on_animation_finished"]
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]

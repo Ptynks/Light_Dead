@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://bf76wafhl1po6"]
+[gd_scene load_steps=38 format=3 uid="uid://bf76wafhl1po6"]
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_5a5df"]
 [ext_resource type="Texture2D" uid="uid://1b80xn5hnlt0" path="res://player/full-sheet.png" id="2_82104"]
@@ -9,6 +9,10 @@
 [ext_resource type="PackedScene" uid="uid://bev10kbwlw73f" path="res://player/dash_effect.tscn" id="5_vyb7d"]
 [ext_resource type="Script" path="res://player/StaminaBarTexture.gd" id="6_5rbjb"]
 [ext_resource type="Script" path="res://player/ObjectTrail.gd" id="6_rrjdo"]
+[ext_resource type="AudioStream" uid="uid://bo4howplolev6" path="res://sounds/run.wav" id="10_dsntu"]
+[ext_resource type="AudioStream" uid="uid://b6728ydy4rb44" path="res://sounds/jump.wav" id="10_rdule"]
+[ext_resource type="AudioStream" uid="uid://drf483kj3wca7" path="res://sounds/slash-21834.mp3" id="11_or1eo"]
+[ext_resource type="AudioStream" uid="uid://h00gqcvn7nvr" path="res://sounds/punch-140236.mp3" id="12_v3b64"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_as4xs"]
 size = Vector2(23.5, 44)
@@ -231,18 +235,21 @@ transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_b3xyw"]
 size = Vector2(67.9999, 88)
 
-[sub_resource type="Gradient" id="Gradient_6lcl2"]
-offsets = PackedFloat32Array(0, 0.714801)
-colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+[sub_resource type="Gradient" id="Gradient_shg00"]
+offsets = PackedFloat32Array(0, 0.65704, 1)
+colors = PackedColorArray(1, 1, 1, 0, 0.638021, 0.200333, 0.186423, 0, 0.429619, 7.70092e-07, 3.60981e-07, 1)
 
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_n7cfr"]
-gradient = SubResource("Gradient_6lcl2")
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_c67tu"]
+gradient = SubResource("Gradient_shg00")
 fill = 1
-fill_from = Vector2(0.482906, 0.487179)
+fill_from = Vector2(0.5, 0.555556)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_1lg4d"]
+polygon = PackedVector2Array(-11, -14, -11, -13, -16, -13, -16, -11, -5, -11, -5, -6, -4, -6, -4, -4, -6, -4, -6, 4, -7, 4, -7, 7, -12, 7, -12, 7, -12, 16, -9, 16, -9, 20, -7, 20, -7, 29, -5, 29, -5, 25, -4, 25, -3, 24, -2, 23, -2, 22, 2, 22, 2, 23, 5, 23, 5, 25, 7, 25, 9, 25, 9, 29, 11, 29, 11, 24, 13, 24, 13, 22, 13, 20, 14, 20, 14, 9, 12, 9, 12, 3, 10, 3, 10, -1, 6, -6, 6, -11, 16, -11, 16, -13, 11, -13, 11, -14, 5, -14, 5, -16, 2, -15.9056, 2, -18, -2, -18, -2, -16, -5, -16, -5, -14)
 
 [node name="Player" type="CharacterBody2D"]
-collision_layer = 9
-collision_mask = 9
+collision_layer = 25
+collision_mask = 25
 script = ExtResource("1_5a5df")
 metadata/_edit_group_ = true
 
@@ -298,6 +305,16 @@ limit_smoothed = true
 position_smoothing_enabled = true
 position_smoothing_speed = 20.0
 
+[node name="Hurt_Effect" type="Sprite2D" parent="Camera2D"]
+visible = false
+position = Vector2(-4.00003, -3.99997)
+scale = Vector2(19.8438, 11.9688)
+texture = SubResource("GradientTexture2D_c67tu")
+
+[node name="Timer" type="Timer" parent="Camera2D/Hurt_Effect"]
+wait_time = 0.2
+one_shot = true
+
 [node name="CanvasPlayer" type="CanvasGroup" parent="."]
 
 [node name="StaminaBarTexture" type="TextureProgressBar" parent="CanvasPlayer"]
@@ -319,15 +336,28 @@ script = ExtResource("6_5rbjb")
 position = Vector2(-540, -288)
 
 [node name="DashEffect" parent="." instance=ExtResource("5_vyb7d")]
+visible = false
 top_level = true
 width = 30.0
 default_color = Color(0, 0.784314, 0.996078, 1)
 script = ExtResource("6_rrjdo")
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
-shadow_enabled = true
-texture = SubResource("GradientTexture2D_n7cfr")
-texture_scale = 7.4
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("OccluderPolygon2D_1lg4d")
+
+[node name="JumpSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("10_rdule")
+pitch_scale = 1.64
+
+[node name="AttackSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("11_or1eo")
+volume_db = 10.024
+
+[node name="DamagedSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("12_v3b64")
+
+[node name="FloorCollisionSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("10_dsntu")
 
 [connection signal="body_entered" from="pos/SwordHit" to="." method="_on_sword_hit_body_entered"]
 

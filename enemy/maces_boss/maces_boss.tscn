@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://buiduw26nswj1"]
+[gd_scene load_steps=32 format=3 uid="uid://buiduw26nswj1"]
 
 [ext_resource type="Script" path="res://enemy/maces_boss/maces_boss.gd" id="1_5cvb0"]
 [ext_resource type="Texture2D" uid="uid://bv1dfcilgnox8" path="res://enemy/maces_boss/attack.png" id="1_8ecty"]
@@ -9,6 +9,8 @@
 [ext_resource type="Script" path="res://enemy/maces_boss/TextureProgressBar.gd" id="7_tgv54"]
 [ext_resource type="Script" path="res://enemy/popup_location.gd" id="8_2ofdl"]
 [ext_resource type="PackedScene" uid="uid://ct3i3784hno0t" path="res://UI/floating_number.tscn" id="9_7yhwl"]
+[ext_resource type="AudioStream" uid="uid://h00gqcvn7nvr" path="res://sounds/punch-140236.mp3" id="10_a7o34"]
+[ext_resource type="AudioStream" uid="uid://bvsenok0hvk8p" path="res://sounds/sword-slash-and-swing-185432.mp3" id="11_8kra7"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_atcjt"]
 atlas = ExtResource("1_8ecty")
@@ -133,19 +135,21 @@ height = 534.0
 radius = 35.0
 height = 92.0
 
-[node name="Maces_Boss" type="RigidBody2D"]
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_ujj5r"]
+polygon = PackedVector2Array(-29, -41, -24, -41, -24, -46, -4, -46, -4, -42, 6, -42, 6, -46, 16, -46, 31, -46, 31, -42, 36, -42, 36, -22, 36, -17, 31, -17, 31, 18, 26, 18, 26, 33, 21, 33, 21, 38, 16, 38, 16, 48, 11, 48, 11, 39, -9, 39, -9, 48, -15, 48, -15, 37, -15, 31, -20, 31, -20, 19, -24, 19, -24, 24, -29, 24, -29, 33, -34, 33, -34, -11, -29, -11)
+
+[node name="Maces_Boss" type="CharacterBody2D"]
 collision_layer = 3
 collision_mask = 3
-mass = 3.61
-gravity_scale = 5.145
 script = ExtResource("1_5cvb0")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+modulate = Color(0.294118, 0.294118, 0.294118, 1)
 texture_filter = 1
 position = Vector2(0.999992, -14)
 scale = Vector2(5, 5)
 sprite_frames = SubResource("SpriteFrames_0xlyw")
-animation = &"attack"
+animation = &"idle"
 autoplay = "idle"
 offset = Vector2(3, 0)
 flip_h = true
@@ -233,6 +237,19 @@ position = Vector2(14, 14)
 shape = SubResource("CapsuleShape2D_161ef")
 
 [node name="Wait" type="Timer" parent="."]
+one_shot = true
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("OccluderPolygon2D_ujj5r")
+
+[node name="DamagedSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("10_a7o34")
+
+[node name="AttackSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("11_8kra7")
+
+[node name="Skill_Time" type="Timer" parent="."]
+wait_time = 0.059
 one_shot = true
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]

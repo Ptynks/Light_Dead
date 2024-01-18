@@ -8,13 +8,15 @@ var direction
 var count_combo = false 
 var current_direction = 0 
 @export var HEALTH = 3
-@export var DASH_POWER = 6500
+@export var DASH_POWER = 700
 @export var player_damage = 5
 @export var MAX_STAMINA = 100
 var current_stamina = 100
 var stamina_need_to_dash = 30
 var can_dash = true
 @export var stamina_restore = 10
+var in_air = false
+var time_to_jump = 2
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity") #lấy lwujc hấp dẫn được cài sẵn trong setting của game
 
@@ -24,6 +26,10 @@ var gravity = ProjectSettings.get_setting("physics/2d/default_gravity") #lấy l
 @onready var dash_timer = $DashTimer
 @onready var attack_cooldown = $AttackCooldown
 @onready var stamina_progess_bar = $CanvasPlayer/StaminaBarTexture
+@onready var jump_sound = $JumpSound
+@onready var attack_sound = $AttackSound
+@onready var damaged_sound = $DamagedSound
+@onready var floor_collision_sound = $FloorCollisionSound
 
 func _ready():
 	$pos/SwordHit/CollisionShape2D.disabled = true
@@ -31,18 +37,24 @@ func _ready():
 	load_data()
 
 func _physics_process(delta):
-	# code trong này chạy lặp lại
-	direction = 0 # hướng mặt nhân vật
+	direction = 0
 	
 	if not is_on_floor():
-		velocity.y += gravity * delta 
+		velocity.y += gravity * delta
+		in_air = true
 	
-	get_input()
+	if in_air and is_on_floor():
+		time_to_jump = 2
+		floor_collision_sound.play()
+		in_air = false
+	get_input(delta)
 
 func _process(_delta):
-	
 	if current_stamina >= stamina_need_to_dash:
 		can_dash = true
+	
+	if $Camera2D/Hurt_Effect/Timer.time_left <= 0:
+		$Camera2D/Hurt_Effect.visible = false
 	
 	if current_stamina < MAX_STAMINA:
 		if dash_timer.time_left == 0:
@@ -62,7 +74,7 @@ func health_change():
 		heart.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 		$HealthBar.add_child(heart)
 
-func get_input():
+func get_input(delta):
 	if Input.is_anything_pressed():
 		if not Input.is_action_pressed("attack"):
 			direction = Input.get_axis("ui_left", "ui_right")
@@ -78,6 +90,7 @@ func get_input():
 		if Input.is_action_pressed("attack") and attack_cooldown.time_left == 0:
 			animation_tree.travel("attack")
 			attack_cooldown.start()
+			attack_sound.play()
 			velocity.x = 0
 			if $Sprite2D.flip_h:
 				$pos.rotation_degrees = 180
@@ -88,15 +101,19 @@ func get_input():
 		if Input.is_action_just_released("attack"):
 			$pos/SwordHit/CollisionShape2D.disabled = true
 		
-		if Input.is_action_pressed("jump") and is_on_floor() or Input.is_action_pressed("jump") and coyote_jump_time.time_left > 0.0:
+		if (Input.is_action_just_pressed("jump") and is_on_floor()) or (Input.is_action_just_pressed("jump") and coyote_jump_time.time_left > 0.0) or (Input.is_action_just_pressed("jump") and time_to_jump > 0):
 			velocity.y = JUMP_VELOCITY
+			time_to_jump -= 1
 			animation_tree.travel("begin_jump")
+			jump_sound.play()
 		
 		if Input.is_action_just_pressed("dash") and can_dash == true:
-			velocity.x = direction * DASH_POWER
+			#velocity.x = direction * DASH_POWER
+			move_and_collide(Vector2(direction * (DASH_POWER * 10) * delta, 0))
 			can_dash = false
 			current_stamina -= stamina_need_to_dash
 			stamina_progess_bar.update(current_stamina * 100 / MAX_STAMINA)
+			jump_sound.play()
 	else:
 		velocity.x = 0
 		$pos/SwordHit/CollisionShape2D.disabled = true
@@ -108,8 +125,17 @@ func get_input():
 	if just_left_legde:
 		coyote_jump_time.start()
 
-func damage(damage):
+func damage(damage, pos):
+	damaged_sound.play()
 	HEALTH -= damage
+	$Camera2D/Hurt_Effect.visible = true
+	$Camera2D/Hurt_Effect/Timer.start()
+	
+	if pos > position.x:
+		move_and_collide(Vector2(-50, -50))
+	else:
+		move_and_collide(Vector2(50, -50))
+	move_and_slide()
 	if HEALTH <= 0:
 		player_dead()
 	else:
@@ -119,7 +145,8 @@ func player_dead():
 	get_tree().change_scene_to_file("res://UI/main_menu.tscn")
 
 func _on_sword_hit_body_entered(body):
-	body.damage(player_damage)
+	if body != null:
+		body.damage(player_damage)
 
 func save():
 	var file = FileAccess.open(save_path, FileAccess.WRITE)
@@ -148,7 +175,7 @@ func load_data():
 		JUMP_VELOCITY = -700.0 
 		power_attack = 30
 		HEALTH = 3
-		DASH_POWER = 6500
+		DASH_POWER = 700
 		player_damage = 5
 		MAX_STAMINA = 100
 		stamina_restore = 10
