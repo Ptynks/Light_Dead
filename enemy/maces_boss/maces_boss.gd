@@ -11,6 +11,8 @@ var count_hit = 0
 var on_skill = false
 var round = 1
 var bullet = preload("res://enemy/maces_boss/double_bullet.tscn")
+var max_bullet = 1
+var count_bullet = 0
 
 @onready var cooldown = $Timer
 @onready var damaged_sound = $DamagedSound
@@ -43,19 +45,20 @@ func _physics_process(delta):
 		on_skill = false
 	
 	if on_skill:
-		if randi() % 2 > 1:
+		if randi() % 2 >= 1:
 			if animated_sprite.flip_h:
 				velocity.x += -30000 * delta
 			else:
 				velocity.x += 30000 * delta
-			print("skill 1")
 		else:
-			var bullet_ins = bullet.instantiate()
-			add_child(bullet_ins)
-			if animated_sprite.flip_h:
-				bullet_ins.position = $left.position
-			else:
-				bullet_ins.position = $right.position
+			if count_bullet < max_bullet:
+				var bullet_ins = bullet.instantiate()
+				add_child(bullet_ins)
+				count_bullet += 1
+				if animated_sprite.flip_h:
+					bullet_ins.position = $left.position
+				else:
+					bullet_ins.position = $right.position
 	
 	if cooldown.time_left <= 1:
 		if in_range:
@@ -102,6 +105,7 @@ func attack(delta):
 		$AnimatedSprite2D.play("attack")
 		$Flash_Danger/AnimatedSprite2D.visible = false
 		count_hit += 1
+		count_bullet = 0
 	else:
 		on_skill = true
 		cooldown.start()

@@ -53,8 +53,8 @@ func _process(_delta):
 	if current_stamina >= stamina_need_to_dash:
 		can_dash = true
 	
-	if $Camera2D/Hurt_Effect/Timer.time_left <= 0:
-		$Camera2D/Hurt_Effect.visible = false
+	if $Camera2D/HurtEffect/Timer.time_left <= 0:
+		$Camera2D/HurtEffect.visible = false
 	
 	if current_stamina < MAX_STAMINA:
 		if dash_timer.time_left == 0:
@@ -128,8 +128,8 @@ func get_input(delta):
 func damage(damage, pos):
 	damaged_sound.play()
 	HEALTH -= damage
-	$Camera2D/Hurt_Effect.visible = true
-	$Camera2D/Hurt_Effect/Timer.start()
+	$Camera2D/HurtEffect.visible = true
+	$Camera2D/HurtEffect/Timer.start()
 	
 	if pos > position.x:
 		move_and_collide(Vector2(-50, -50))

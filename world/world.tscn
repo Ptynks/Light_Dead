@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://dxokq3x1beypk"]
+[gd_scene load_steps=25 format=3 uid="uid://dxokq3x1beypk"]
 
 [ext_resource type="Script" path="res://world/world.gd" id="1_15fqp"]
 [ext_resource type="PackedScene" uid="uid://bf76wafhl1po6" path="res://player/player.tscn" id="1_42ntx"]
@@ -17,15 +17,24 @@
 [ext_resource type="Texture2D" uid="uid://bl61jwb2hgg5w" path="res://UI/icons/pxkw_k.png" id="14_vg3nd"]
 [ext_resource type="Texture2D" uid="uid://cngh7ea55rt3p" path="res://UI/icons/pxkw_j.png" id="15_3w5qi"]
 [ext_resource type="PackedScene" uid="uid://5bebgf66f0a8" path="res://world/portal.tscn" id="16_p48ow"]
-[ext_resource type="Script" path="res://world/boss_area.gd" id="17_0bgib"]
+[ext_resource type="PackedScene" uid="uid://b1npd71muh8h0" path="res://enemy/shock_sweeper/shock_sweeper.tscn" id="18_sb3mq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g5ays"]
 size = Vector2(159.306, 7.19886)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_krqn3"]
+size = Vector2(1.02515, 255.463)
+
+[sub_resource type="Gradient" id="Gradient_dc0bv"]
+colors = PackedColorArray(0, 0, 0, 1, 1, 0.480031, 0.293998, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_2gpeq"]
+gradient = SubResource("Gradient_dc0bv")
+
 [sub_resource type="LabelSettings" id="LabelSettings_sia2w"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_48rvm"]
-size = Vector2(2654.23, 578.337)
+size = Vector2(2341.92, 578.337)
 
 [node name="World" type="Node2D"]
 position = Vector2(-24, -19)
@@ -137,12 +146,24 @@ scale = Vector2(3, 3)
 position = Vector2(2509.58, 1407.89)
 scale = Vector2(3, 3)
 
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="floor"]
+position = Vector2(4624, 1119.94)
+rotation = -3.14159
+scale = Vector2(27.245, 2.26242)
+shape = SubResource("RectangleShape2D_krqn3")
+disabled = true
+debug_color = Color(0.345098, 0, 0.0509804, 0.419608)
+
+[node name="Sprite2D" type="Sprite2D" parent="floor/CollisionShape2D2"]
+visible = false
+rotation = 1.5708
+texture = SubResource("GradientTexture1D_2gpeq")
+
 [node name="DirectionalLight2D" type="DirectionalLight2D" parent="."]
 energy = 0.61
-blend_mode = 1
 
 [node name="Player" parent="." instance=ExtResource("1_42ntx")]
-position = Vector2(4633.31, 1322.53)
+position = Vector2(1420.3, 167.63)
 
 [node name="CanvasGroup" type="CanvasGroup" parent="."]
 
@@ -218,18 +239,23 @@ position = Vector2(694.118, 443.244)
 mass = 0.01
 gravity_scale = 0.0
 
-[node name="boss_area" type="Area2D" parent="."]
-script = ExtResource("17_0bgib")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="boss_area"]
-position = Vector2(3603.08, 1121.81)
-shape = SubResource("RectangleShape2D_48rvm")
-debug_color = Color(0.513726, 0.576471, 0, 0.419608)
-
 [node name="DirectionalLight2D2" type="DirectionalLight2D" parent="."]
 color = Color(0.2, 0.2, 0.2, 1)
 energy = 0.09
 blend_mode = 1
 shadow_enabled = true
 
-[connection signal="body_entered" from="boss_area" to="boss_area" method="_on_body_entered"]
+[node name="BossArena" type="Node2D" parent="."]
+position = Vector2(3451.97, 1118.91)
+
+[node name="boss_area" type="Area2D" parent="BossArena"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BossArena/boss_area"]
+position = Vector2(-11.3362, 0)
+shape = SubResource("RectangleShape2D_48rvm")
+debug_color = Color(0.513726, 0.576471, 0, 0.419608)
+
+[node name="ShockSweeper" parent="." instance=ExtResource("18_sb3mq")]
+position = Vector2(1715.12, 315.721)
+
+[connection signal="body_entered" from="BossArena/boss_area" to="." method="_on_boss_area_body_entered"]

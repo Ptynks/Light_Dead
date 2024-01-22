@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://5bebgf66f0a8"]
+[gd_scene load_steps=26 format=3 uid="uid://5bebgf66f0a8"]
 
 [ext_resource type="Script" path="res://world/portal.gd" id="1_ttwoa"]
 [ext_resource type="Texture2D" uid="uid://cbcoeaw5xtnf5" path="res://world/Gravity-SpriteSheet.png" id="1_ukupw"]
@@ -154,6 +154,8 @@ animations = [{
 [sub_resource type="CircleShape2D" id="CircleShape2D_qsyw6"]
 radius = 31.0644
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_rgpw3"]
+
 [node name="portal" type="RigidBody2D"]
 script = ExtResource("1_ttwoa")
 
@@ -168,6 +170,9 @@ visibility_layer = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
 shape = SubResource("CircleShape2D_qsyw6")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_rgpw3")
 
 [connection signal="body_entered" from="HurtBox" to="." method="_on_hurt_box_body_entered"]
 [connection signal="body_exited" from="HurtBox" to="." method="_on_hurt_box_body_exited"]

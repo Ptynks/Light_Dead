@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://bf76wafhl1po6"]
+[gd_scene load_steps=42 format=3 uid="uid://bf76wafhl1po6"]
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_5a5df"]
 [ext_resource type="Texture2D" uid="uid://1b80xn5hnlt0" path="res://player/full-sheet.png" id="2_82104"]
@@ -9,8 +9,12 @@
 [ext_resource type="PackedScene" uid="uid://bev10kbwlw73f" path="res://player/dash_effect.tscn" id="5_vyb7d"]
 [ext_resource type="Script" path="res://player/StaminaBarTexture.gd" id="6_5rbjb"]
 [ext_resource type="Script" path="res://player/ObjectTrail.gd" id="6_rrjdo"]
+[ext_resource type="Texture2D" uid="uid://q0pj68qxqjom" path="res://UI/icons/skill_icons/release_v1.2-single_59.png" id="8_0f161"]
+[ext_resource type="Texture2D" uid="uid://t4gn02aq6vsk" path="res://UI/icons/skill_icons/release_v1.2-single_44.png" id="9_4isyu"]
+[ext_resource type="Texture2D" uid="uid://cngh7ea55rt3p" path="res://UI/icons/pxkw_j.png" id="9_d3tn3"]
 [ext_resource type="AudioStream" uid="uid://bo4howplolev6" path="res://sounds/run.wav" id="10_dsntu"]
 [ext_resource type="AudioStream" uid="uid://b6728ydy4rb44" path="res://sounds/jump.wav" id="10_rdule"]
+[ext_resource type="Texture2D" uid="uid://3ytcnhn873gd" path="res://UI/icons/pxkw_l.png" id="11_1yh8a"]
 [ext_resource type="AudioStream" uid="uid://drf483kj3wca7" path="res://sounds/slash-21834.mp3" id="11_or1eo"]
 [ext_resource type="AudioStream" uid="uid://h00gqcvn7nvr" path="res://sounds/punch-140236.mp3" id="12_v3b64"]
 
@@ -225,7 +229,7 @@ states/Start/position = Vector2(125, 100)
 states/attack/node = SubResource("AnimationNodeAnimation_ylxt6")
 states/attack/position = Vector2(632, 48)
 states/begin_jump/node = SubResource("AnimationNodeAnimation_c8knr")
-states/begin_jump/position = Vector2(525, 223)
+states/begin_jump/position = Vector2(524, 223)
 states/idle/node = SubResource("AnimationNodeAnimation_tlsrq")
 states/idle/position = Vector2(343, 54)
 states/run/node = SubResource("AnimationNodeAnimation_8xuek")
@@ -305,13 +309,13 @@ limit_smoothed = true
 position_smoothing_enabled = true
 position_smoothing_speed = 20.0
 
-[node name="Hurt_Effect" type="Sprite2D" parent="Camera2D"]
+[node name="HurtEffect" type="Sprite2D" parent="Camera2D"]
 visible = false
 position = Vector2(-4.00003, -3.99997)
 scale = Vector2(19.8438, 11.9688)
 texture = SubResource("GradientTexture2D_c67tu")
 
-[node name="Timer" type="Timer" parent="Camera2D/Hurt_Effect"]
+[node name="Timer" type="Timer" parent="Camera2D/HurtEffect"]
 wait_time = 0.2
 one_shot = true
 
@@ -331,6 +335,26 @@ scale = Vector2(4.68, 3.08)
 texture_over = ExtResource("4_wo0ol")
 texture_progress = ExtResource("5_6trg2")
 script = ExtResource("6_5rbjb")
+
+[node name="AttackIcon" type="Sprite2D" parent="CanvasPlayer"]
+texture_filter = 3
+position = Vector2(-540, 260)
+scale = Vector2(2, 2)
+texture = ExtResource("8_0f161")
+
+[node name="Sprite2D" type="Sprite2D" parent="CanvasPlayer/AttackIcon"]
+position = Vector2(0, 19.5)
+texture = ExtResource("9_d3tn3")
+
+[node name="DashIcon" type="Sprite2D" parent="CanvasPlayer"]
+texture_filter = 3
+position = Vector2(-472, 261)
+scale = Vector2(2, 2)
+texture = ExtResource("9_4isyu")
+
+[node name="Sprite2D" type="Sprite2D" parent="CanvasPlayer/DashIcon"]
+position = Vector2(1, 20)
+texture = ExtResource("11_1yh8a")
 
 [node name="HealthBar" type="CanvasGroup" parent="."]
 position = Vector2(-540, -288)
